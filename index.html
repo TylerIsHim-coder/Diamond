@@ -73,15 +73,21 @@
       pointer-events: none;
     }
 
-    /* Editorial drop cap on About paragraph */
-    .editorial-lede::first-letter {
-      font-family: "Playfair Display", serif;
-      font-size: 4.25em;
-      font-weight: 500;
-      float: left;
-      line-height: 0.9;
-      padding: 0.05em 0.12em 0 0;
+    /* Our Story opener — large bold "LA" + body line on same baseline */
+    .our-story-opener {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      column-gap: 0.65rem;
+      row-gap: 0.25rem;
+    }
+    .la-dropcap {
+      font-family: "Playfair Display", Georgia, serif;
+      font-weight: 700;
+      font-size: clamp(3rem, 6.5vw, 4.75rem);
+      line-height: 0.92;
       color: #1A1A1A;
+      letter-spacing: -0.03em;
     }
 
     /* Hairline divider */
@@ -243,7 +249,6 @@
           <li><a class="menu-link font-serif text-white hover:text-hotpink transition-colors duration-200" data-menu-link href="index.html" style="font-size: 1.5rem; letter-spacing: -0.01em;">Home</a></li>
           <li><a class="menu-link font-serif text-white hover:text-hotpink transition-colors duration-200" data-menu-link href="shop.html" style="font-size: 1.5rem; letter-spacing: -0.01em;">Shop</a></li>
           <li><a class="menu-link font-serif text-white hover:text-hotpink transition-colors duration-200" data-menu-link href="giving-back.html" style="font-size: 1.5rem; letter-spacing: -0.01em;">Giving Back</a></li>
-          <li><a class="menu-link font-serif text-white hover:text-hotpink transition-colors duration-200" data-menu-link href="about.html" style="font-size: 1.5rem; letter-spacing: -0.01em;">About</a></li>
           <li><a class="menu-link font-serif text-white hover:text-hotpink transition-colors duration-200" data-menu-link href="contact.html" style="font-size: 1.5rem; letter-spacing: -0.01em;">Contact</a></li>
         </ul>
       </nav>
@@ -283,8 +288,8 @@
 
     <div class="relative z-10 mx-auto flex max-w-8xl flex-col justify-end px-6 pb-16 pt-32 sm:pt-40 md:pb-24" style="min-height: calc(100svh - var(--nav-h));">
       <div class="max-w-3xl">
-        <p class="rise rise-1 text-[11px] uppercase tracking-editorial text-charcoal/70">
-          Los Angeles · Est. Beauty Supply
+        <p class="rise rise-1 text-[11px] font-semibold uppercase tracking-editorial text-charcoal/70">
+          Los Angeles | Inglewood | Gardena · Est. 2011 · Beauty Supply
         </p>
 
         <h1 class="rise rise-2 mt-6 font-serif text-charcoal" style="font-size: clamp(2.75rem, 7.6vw, 6.5rem); line-height: 0.98; font-weight: 500; letter-spacing: -0.02em;">
@@ -293,24 +298,14 @@
           </span>
         </h1>
 
-        <p class="rise rise-3 mt-7 max-w-md text-[15px] leading-relaxed text-ink/90">
-          A Black-owned destination in South L.A. for the latest hair, wigs, jewels, and styling essentials — curated under one roof.
-        </p>
-
-        <div class="rise rise-4 mt-8 flex flex-wrap items-center gap-3">
+        <div class="rise rise-3 mt-8 flex flex-wrap items-center gap-3">
           <a href="#collection" class="group inline-flex items-center gap-2.5 rounded-full bg-hotpink px-6 py-3.5 text-[13px] font-semibold tracking-wide text-white hover:bg-hotpink2 transition-colors duration-200 cursor-pointer">
-            Browse Collection
+            Top Selling Products
             <svg viewBox="0 0 24 24" class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
           <a href="#visit" class="inline-flex items-center gap-2.5 rounded-full border border-charcoal/40 bg-cream/40 px-6 py-3.5 text-[13px] font-medium tracking-wide text-charcoal hover:bg-cream/70 hover:border-charcoal transition-colors duration-200 cursor-pointer backdrop-blur-sm">
             Visit Us Today
           </a>
-        </div>
-
-        <div class="rise rise-5 mt-12 flex items-center gap-4 text-[11px] uppercase tracking-editorial text-charcoal/70">
-          <span>Open today · closes 7:50 PM</span>
-          <span class="hidden sm:inline-block h-px w-12 bg-charcoal/30"></span>
-          <span class="hidden sm:inline">(323) 789-6060</span>
         </div>
       </div>
 
@@ -325,28 +320,16 @@
   <section id="about" class="bg-cream2">
     <div class="mx-auto max-w-8xl px-6 py-24 md:py-32">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
-        <!-- Left rail -->
-        <div class="md:col-span-4 reveal">
-          <p class="font-serif italic text-[15px] text-muted">— Our Story</p>
-          <div class="rule mt-6 mb-8 max-w-[8rem]"></div>
-          <p class="font-serif mt-3 text-[28px] leading-tight text-charcoal">&ldquo;Every girl's best friend&rdquo;</p>
-        </div>
-
-        <!-- Right paragraph -->
-        <div class="md:col-span-8 reveal">
-          <p class="editorial-lede font-serif text-[26px] md:text-[30px] leading-[1.35] text-charcoal/90">
-            A <span class="italic">Black-owned</span> beauty supply destination stocking the latest styles, premium hair, wigs, hair jewels, and costume jewelry — curated under one elegant roof. Our team knows the products by sight; describe the look you want and we'll find it for you.
-          </p>
-
-          <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-y-6 sm:gap-x-10 border-t border-charcoal/10 pt-8">
-            <div>
-              <p class="text-[10px] uppercase tracking-editorial text-muted">Locations</p>
-              <p class="font-serif mt-2 text-[20px]">Four LA Stores</p>
-            </div>
-            <div class="sm:border-l sm:border-charcoal/10 sm:pl-10">
-              <p class="text-[10px] uppercase tracking-editorial text-muted">Hours</p>
-              <p class="font-serif mt-2 text-[20px]">Open Daily · Closes 7:50 PM</p>
-            </div>
+        <div class="md:col-span-12 reveal">
+          <div class="max-w-3xl space-y-4 font-serif text-[22px] md:text-[26px] leading-snug text-charcoal/90">
+            <p class="our-story-opener">
+              <span class="la-dropcap">LA</span>
+              <span>boutique beauty supply</span>
+            </p>
+            <p>Est. 2011 | Elevated, personalized service</p>
+            <p>Private wig room + 100% Virgin Chloe Private Label Hair</p>
+            <p>Curated high-end beauty + jewelry collection</p>
+            <p>Beauty with purpose</p>
           </div>
         </div>
       </div>
@@ -361,7 +344,7 @@
         <div>
           <p class="text-[11px] uppercase tracking-editorial text-muted">The Collection</p>
           <h2 class="mt-4 font-serif text-charcoal" style="font-size: clamp(2.25rem, 4.4vw, 3.75rem); line-height: 1.02; letter-spacing: -0.015em;">
-            Styling Essentials.
+            Top Selling Products.
           </h2>
           <p class="mt-4 max-w-md text-[15px] text-ink/80">A tightly edited selection — the pieces our regulars come back for, week after week.</p>
         </div>
