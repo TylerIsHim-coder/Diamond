@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Diamond Beauty Supply — Los Angeles</title>
+  <meta name="description" content="A Black-owned beauty supply destination in South Los Angeles. The latest styles, premium hair, wigs, hair jewels, and costume jewelry — all under one roof." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream:    '#FAF9F6',
+            cream2:   '#F4F4F0',
+            charcoal: '#1A1A1A',
+            ink:      '#3A3A3A',
+            muted:    '#6B6B6B',
+            gold:     '#C9A961',
+            line:     '#E5E2DA',
+            hotpink:  '#E0247A',
+            hotpink2: '#BD1A66',
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans:  ['Inter', 'system-ui', 'sans-serif'],
+          },
+          letterSpacing: {
+            'editorial': '0.22em',
+          },
+          maxWidth: {
+            '8xl': '88rem',
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    :root { --nav-h: 6rem; }
+    @media (min-width: 640px) { :root { --nav-h: 8.5rem; } }
+    @media (min-width: 1024px) { :root { --nav-h: 14.5rem; } }
+
+    html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: #FAF9F6;
+      color: #1A1A1A;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    .font-serif { font-family: "Playfair Display", Georgia, serif; }
+
+    /* Hero video sizing + crossfade */
+    .hero-video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 600ms cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+    }
+    .hero-video.active { opacity: 1; }
+    .hero-vignette {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(120% 80% at 50% 40%, rgba(250,249,246,0.30) 0%, rgba(250,249,246,0.55) 60%, rgba(250,249,246,0.85) 100%),
+        linear-gradient(180deg, rgba(26,26,26,0.05) 0%, rgba(26,26,26,0.18) 100%);
+      pointer-events: none;
+    }
+
+    /* Editorial drop cap on About paragraph */
+    .editorial-lede::first-letter {
+      font-family: "Playfair Display", serif;
+      font-size: 4.25em;
+      font-weight: 500;
+      float: left;
+      line-height: 0.9;
+      padding: 0.05em 0.12em 0 0;
+      color: #1A1A1A;
+    }
+
+    /* Hairline divider */
+    .rule { height: 1px; background: #1A1A1A; opacity: 0.14; }
+    .rule-bright { height: 1px; background: rgba(250,249,246,0.20); }
+
+    /* Product card hover: subtle image-well overlay only */
+    .pcard .pwell-overlay { opacity: 0; transition: opacity 300ms ease-out; }
+    .pcard:hover .pwell-overlay,
+    .pcard:focus-within .pwell-overlay { opacity: 1; }
+
+    /* Image-well placeholder gradient */
+    .pwell {
+      background:
+        radial-gradient(120% 90% at 30% 20%, #FFFFFF 0%, transparent 55%),
+        linear-gradient(160deg, #F4F4F0 0%, #E9E6DD 100%);
+    }
+    .pwell-overlay {
+      background: linear-gradient(180deg, rgba(26,26,26,0.0) 50%, rgba(26,26,26,0.18) 100%);
+    }
+
+    /* Mobile review carousel: scroll-snap */
+    .snap-row { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .snap-row > * { scroll-snap-align: center; }
+
+    /* Rise-in animation for hero text */
+    @keyframes rise {
+      0%   { transform: translateY(14px); opacity: 0; }
+      100% { transform: translateY(0);    opacity: 1; }
+    }
+    .rise   { animation: rise 700ms cubic-bezier(.2,.7,.2,1) both; }
+    .rise-1 { animation-delay: 80ms; }
+    .rise-2 { animation-delay: 200ms; }
+    .rise-3 { animation-delay: 340ms; }
+    .rise-4 { animation-delay: 480ms; }
+    .rise-5 { animation-delay: 620ms; }
+
+    /* Reveal-on-scroll */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 700ms ease-out, transform 700ms cubic-bezier(.2,.7,.2,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Focus ring */
+    :focus-visible {
+      outline: 2px solid #1A1A1A;
+      outline-offset: 3px;
+      border-radius: 999px;
+    }
+
+    /* Reduced motion: kill autoplay vibes & decorative motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Hide scrollbar on snap row */
+    .snap-row::-webkit-scrollbar { display: none; }
+    .snap-row { scrollbar-width: none; }
+
+    /* ====== Sidebar menu ====== */
+    .menu-overlay {
+      position: fixed; inset: 0; z-index: 60;
+      pointer-events: none;
+      visibility: hidden;
+      transition: visibility 0s linear 520ms;
+    }
+    .menu-overlay.is-open {
+      pointer-events: auto;
+      visibility: visible;
+      transition: visibility 0s linear 0s;
+    }
+    .menu-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      opacity: 0;
+      transition: opacity 520ms cubic-bezier(0.32, 0.72, 0, 1);
+      will-change: opacity;
+    }
+    .menu-overlay.is-open .menu-backdrop { opacity: 1; }
+
+    .menu-panel {
+      position: absolute; top: 0; left: 0; bottom: 0;
+      width: min(280px, 78vw);
+      background: #000;
+      color: #FFFFFF;
+      transform: translate3d(-100%, 0, 0);
+      transition: transform 520ms cubic-bezier(0.32, 0.72, 0, 1);
+      will-change: transform;
+      display: flex; flex-direction: column;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+    }
+    .menu-overlay.is-open .menu-panel {
+      transform: translate3d(0, 0, 0);
+    }
+
+    .menu-link {
+      display: inline-block;
+      transform: translateX(-12px);
+      opacity: 0;
+      transition: transform 600ms cubic-bezier(0.32, 0.72, 0, 1), opacity 600ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .menu-overlay.is-open .menu-link {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    .menu-overlay.is-open .menu-link:nth-child(1) { transition-delay: 120ms; }
+    .menu-overlay.is-open .menu-link:nth-child(2) { transition-delay: 180ms; }
+    .menu-overlay.is-open .menu-link:nth-child(3) { transition-delay: 240ms; }
+    .menu-overlay.is-open .menu-link:nth-child(4) { transition-delay: 300ms; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .menu-backdrop, .menu-panel, .menu-link {
+        transition-duration: 0.001ms !important;
+        transition-delay: 0s !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-cream text-charcoal">
+
+  <!-- ============ TOP NAVBAR ============ -->
+  <header class="relative z-50 bg-black text-cream border-b border-white/10" style="height: var(--nav-h);">
+    <nav aria-label="Primary" class="h-full">
+      <div class="relative mx-auto max-w-8xl px-6 lg:px-10 h-full">
+        <!-- Hamburger (top-left) -->
+        <button id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" class="absolute left-6 top-4 lg:left-10 lg:top-6 inline-flex h-10 w-10 items-center justify-center text-white hover:opacity-80 transition-opacity duration-200 cursor-pointer">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+
+        <!-- Wordmark (center) -->
+        <a href="index.html" class="flex items-center justify-center h-full group" aria-label="Diamond Beauty Supply — home">
+          <img src="assets/diamond-logo.png" alt="Diamond Beauty Supply" class="h-16 sm:h-24 lg:h-48 w-auto max-w-full object-contain" decoding="async" />
+        </a>
+      </div>
+
+    </nav>
+  </header>
+
+  <!-- ============ SIDEBAR MENU ============ -->
+  <div id="mobileMenu" class="menu-overlay" aria-hidden="true">
+    <div class="menu-backdrop" data-menu-close aria-hidden="true"></div>
+    <aside class="menu-panel" role="dialog" aria-modal="true" aria-label="Site menu">
+      <!-- Top bar: logo + close -->
+      <div class="flex items-center justify-between px-5 py-4 border-b border-white/10">
+        <a href="index.html" class="flex items-center" aria-label="Diamond Beauty Supply — home" data-menu-link>
+          <img src="assets/diamond-logo.png" alt="Diamond Beauty Supply" class="h-10 w-auto" decoding="async" />
+        </a>
+        <button id="navClose" type="button" aria-label="Close menu" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-white hover:bg-white/10 transition-colors duration-200 cursor-pointer">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+
+      <!-- Links -->
+      <nav class="flex flex-1 items-start px-7 pt-10" aria-label="Site navigation">
+        <ul class="flex flex-col gap-5 w-full">
+          <li><a class="menu-link font-serif text-white hover:text-hotpink transition-colors duration-200" data-menu-link href="index.html" style="font-size: 1.5rem; letter-spacing: -0.01em;">Home</a></li>
+          <li><a class="menu-link font-serif text-white hover:text-hotpink transition-colors duration-200" data-menu-link href="shop.html" style="font-size: 1.5rem; letter-spacing: -0.01em;">Shop</a></li>
+          <li><a class="menu-link font-serif text-white hover:text-hotpink transition-colors duration-200" data-menu-link href="giving-back.html" style="font-size: 1.5rem; letter-spacing: -0.01em;">Giving Back</a></li>
+          <li><a class="menu-link font-serif text-white hover:text-hotpink transition-colors duration-200" data-menu-link href="about.html" style="font-size: 1.5rem; letter-spacing: -0.01em;">About</a></li>
+          <li><a class="menu-link font-serif text-white hover:text-hotpink transition-colors duration-200" data-menu-link href="contact.html" style="font-size: 1.5rem; letter-spacing: -0.01em;">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Bottom: store locations -->
+      <div class="px-5 py-5 border-t border-white/10">
+        <p class="text-[10px] uppercase tracking-editorial text-white/45 mb-3">Locations</p>
+        <nav class="flex flex-col gap-2.5" aria-label="Store locations">
+          <a href="https://www.google.com/maps/search/?api=1&query=1836+W+Manchester+Ave,+Los+Angeles,+CA+90047" target="_blank" rel="noopener noreferrer" data-menu-link class="block rounded-lg border border-white/10 px-3 py-2 text-left transition-colors duration-200 hover:bg-white/10 hover:border-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream">
+            <span class="font-serif text-[13px] text-white leading-tight">Los Angeles</span>
+            <span class="mt-0.5 block text-[10px] leading-relaxed text-white/65">1836 W Manchester Ave<br/>Los Angeles, CA 90047</span>
+          </a>
+          <a href="https://www.google.com/maps/search/?api=1&query=1300+Centinela+Ave,+Inglewood,+CA+90302" target="_blank" rel="noopener noreferrer" data-menu-link class="block rounded-lg border border-white/10 px-3 py-2 text-left transition-colors duration-200 hover:bg-white/10 hover:border-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream">
+            <span class="font-serif text-[13px] text-white leading-tight">Inglewood</span>
+            <span class="mt-0.5 block text-[10px] leading-relaxed text-white/65">1300 Centinela Ave<br/>Inglewood, CA 90302</span>
+          </a>
+          <a href="https://www.google.com/maps/search/?api=1&query=2227+Rosecrans+Ave,+Gardena,+CA+90249" target="_blank" rel="noopener noreferrer" data-menu-link class="block rounded-lg border border-white/10 px-3 py-2 text-left transition-colors duration-200 hover:bg-white/10 hover:border-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream">
+            <span class="font-serif text-[13px] text-white leading-tight">Gardena</span>
+            <span class="mt-0.5 block text-[10px] leading-relaxed text-white/65">2227–2231 Rosecrans Ave<br/>Gardena, CA 90249</span>
+          </a>
+          <a href="https://www.google.com/maps/search/?api=1&query=800+W+Manchester+Ave,+Los+Angeles,+CA+90044" target="_blank" rel="noopener noreferrer" data-menu-link class="block rounded-lg border border-white/10 px-3 py-2 text-left transition-colors duration-200 hover:bg-white/10 hover:border-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream">
+            <span class="font-serif text-[13px] text-white leading-tight">Los Angeles</span>
+            <span class="mt-0.5 block text-[10px] leading-relaxed text-white/65">800 W Manchester Ave<br/>Los Angeles, CA 90044</span>
+          </a>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <section id="top" class="relative isolate overflow-hidden" style="min-height: calc(100svh - var(--nav-h));">
+    <video class="hero-video active" id="heroVideo1" muted playsinline preload="auto" aria-hidden="true" loop autoplay>
+      <source src="assets/hero-bg.mov" type="video/quicktime" />
+      <source src="assets/hero-bg.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-vignette" aria-hidden="true"></div>
+
+    <div class="relative z-10 mx-auto flex max-w-8xl flex-col justify-end px-6 pb-16 pt-32 sm:pt-40 md:pb-24" style="min-height: calc(100svh - var(--nav-h));">
+      <div class="max-w-3xl">
+        <p class="rise rise-1 text-[11px] uppercase tracking-editorial text-charcoal/70">
+          Los Angeles · Est. Beauty Supply
+        </p>
+
+        <h1 class="rise rise-2 mt-6 font-serif text-charcoal" style="font-size: clamp(2.75rem, 7.6vw, 6.5rem); line-height: 0.98; font-weight: 500; letter-spacing: -0.02em;">
+          <span class="block italic font-normal text-charcoal/85" style="font-size: clamp(1.5rem, 3.2vw, 2.6rem); line-height: 1.15; letter-spacing: -0.01em;">
+            Every girl's best friend
+          </span>
+        </h1>
+
+        <p class="rise rise-3 mt-7 max-w-md text-[15px] leading-relaxed text-ink/90">
+          A Black-owned destination in South L.A. for the latest hair, wigs, jewels, and styling essentials — curated under one roof.
+        </p>
+
+        <div class="rise rise-4 mt-8 flex flex-wrap items-center gap-3">
+          <a href="#collection" class="group inline-flex items-center gap-2.5 rounded-full bg-hotpink px-6 py-3.5 text-[13px] font-semibold tracking-wide text-white hover:bg-hotpink2 transition-colors duration-200 cursor-pointer">
+            Browse Collection
+            <svg viewBox="0 0 24 24" class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#visit" class="inline-flex items-center gap-2.5 rounded-full border border-charcoal/40 bg-cream/40 px-6 py-3.5 text-[13px] font-medium tracking-wide text-charcoal hover:bg-cream/70 hover:border-charcoal transition-colors duration-200 cursor-pointer backdrop-blur-sm">
+            Visit Us Today
+          </a>
+        </div>
+
+        <div class="rise rise-5 mt-12 flex items-center gap-4 text-[11px] uppercase tracking-editorial text-charcoal/70">
+          <span>Open today · closes 7:50 PM</span>
+          <span class="hidden sm:inline-block h-px w-12 bg-charcoal/30"></span>
+          <span class="hidden sm:inline">(323) 789-6060</span>
+        </div>
+      </div>
+
+      <!-- Bottom-right meta -->
+      <div class="pointer-events-none absolute bottom-8 right-6 hidden md:flex items-end gap-4 text-[10px] uppercase tracking-editorial text-charcoal/60">
+        <span>Diamond Beauty Supply</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT / EDITORIAL HIGHLIGHT ============ -->
+  <section id="about" class="bg-cream2">
+    <div class="mx-auto max-w-8xl px-6 py-24 md:py-32">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
+        <!-- Left rail -->
+        <div class="md:col-span-4 reveal">
+          <p class="font-serif italic text-[15px] text-muted">— Our Story</p>
+          <div class="rule mt-6 mb-8 max-w-[8rem]"></div>
+          <p class="font-serif mt-3 text-[28px] leading-tight text-charcoal">&ldquo;Every girl's best friend&rdquo;</p>
+        </div>
+
+        <!-- Right paragraph -->
+        <div class="md:col-span-8 reveal">
+          <p class="editorial-lede font-serif text-[26px] md:text-[30px] leading-[1.35] text-charcoal/90">
+            A <span class="italic">Black-owned</span> beauty supply destination stocking the latest styles, premium hair, wigs, hair jewels, and costume jewelry — curated under one elegant roof. Our team knows the products by sight; describe the look you want and we'll find it for you.
+          </p>
+
+          <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-y-6 sm:gap-x-10 border-t border-charcoal/10 pt-8">
+            <div>
+              <p class="text-[10px] uppercase tracking-editorial text-muted">Locations</p>
+              <p class="font-serif mt-2 text-[20px]">Four LA Stores</p>
+            </div>
+            <div class="sm:border-l sm:border-charcoal/10 sm:pl-10">
+              <p class="text-[10px] uppercase tracking-editorial text-muted">Hours</p>
+              <p class="font-serif mt-2 text-[20px]">Open Daily · Closes 7:50 PM</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STYLING COLLECTION (PRODUCT GRID) ============ -->
+  <section id="collection" class="bg-cream">
+    <div class="mx-auto max-w-8xl px-6 py-24 md:py-32">
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8 reveal">
+        <div>
+          <p class="text-[11px] uppercase tracking-editorial text-muted">The Collection</p>
+          <h2 class="mt-4 font-serif text-charcoal" style="font-size: clamp(2.25rem, 4.4vw, 3.75rem); line-height: 1.02; letter-spacing: -0.015em;">
+            Styling Essentials.
+          </h2>
+          <p class="mt-4 max-w-md text-[15px] text-ink/80">A tightly edited selection — the pieces our regulars come back for, week after week.</p>
+        </div>
+        <a href="#visit" class="group inline-flex items-center gap-2 self-start md:self-end text-[12px] uppercase tracking-editorial text-charcoal hover:opacity-70 transition-opacity duration-200 cursor-pointer">
+          See it in store
+          <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="rule mt-10 mb-12"></div>
+
+      <!-- Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-14">
+
+        <!-- Card 1 -->
+        <article class="pcard group reveal" tabindex="0" aria-label="Tgin Bundle — Hair Care">
+          <figure class="relative overflow-hidden rounded-[6px] aspect-[4/5] pwell">
+            <img src="assets/tgin-bundle.png" alt="Tgin hair care bundle — shampoo, conditioner, leave-in and styling products arranged on a cream backdrop" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+            <div class="pwell-overlay absolute inset-0"></div>
+          </figure>
+          <figcaption class="mt-4 flex flex-col gap-1.5">
+            <p class="text-[10px] uppercase tracking-editorial text-muted">Hair Care</p>
+            <h3 class="font-serif text-[18px] leading-tight">Tgin</h3>
+          </figcaption>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="pcard group reveal" tabindex="0" aria-label="Doux Bundle — Hair Care">
+          <figure class="relative overflow-hidden rounded-[6px] aspect-[4/5] pwell">
+            <img src="assets/doux-bundle.png" alt="The Doux hair care bundle — Crazy Sexy Curl, Mousse Def, Bee Girl, Big Poppa, Chief Rocka and Bananaril styling products" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+            <div class="pwell-overlay absolute inset-0"></div>
+          </figure>
+          <figcaption class="mt-4 flex flex-col gap-1.5">
+            <p class="text-[10px] uppercase tracking-editorial text-muted">Hair Care</p>
+            <h3 class="font-serif text-[18px] leading-tight">Doux</h3>
+          </figcaption>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="pcard group reveal" tabindex="0" aria-label="Cantu Bundle — Hair Care">
+          <figure class="relative overflow-hidden rounded-[6px] aspect-[4/5] pwell">
+            <img src="assets/cantu-bundle.png" alt="Cantu hair care bundle — curl activator cream, leave-in conditioner and styling products arranged on stone risers" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+            <div class="pwell-overlay absolute inset-0"></div>
+          </figure>
+          <figcaption class="mt-4 flex flex-col gap-1.5">
+            <p class="text-[10px] uppercase tracking-editorial text-muted">Hair Care</p>
+            <h3 class="font-serif text-[18px] leading-tight">Cantu</h3>
+          </figcaption>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="pcard group reveal" tabindex="0" aria-label="Mielle Bundle — Hair Care">
+          <figure class="relative overflow-hidden rounded-[6px] aspect-[4/5] pwell">
+            <img src="assets/mielle-bundle.png" alt="Mielle Organics hair care bundle — Pomegranate &amp; Honey and Rosemary Mint products arranged on stone risers" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+            <div class="pwell-overlay absolute inset-0"></div>
+          </figure>
+          <figcaption class="mt-4 flex flex-col gap-1.5">
+            <p class="text-[10px] uppercase tracking-editorial text-muted">Hair Care</p>
+            <h3 class="font-serif text-[18px] leading-tight">Mielle</h3>
+          </figcaption>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REVIEWS / TESTIMONIALS ============ -->
+  <section id="reviews" class="bg-cream2">
+    <div class="mx-auto max-w-8xl px-6 py-24 md:py-32">
+      <!-- Top stripe: aggregate rating -->
+      <div class="text-center reveal">
+        <p class="text-[11px] uppercase tracking-editorial text-muted">Word of Mouth</p>
+        <div class="mt-6 flex items-end justify-center gap-3">
+          <span class="font-serif leading-none text-charcoal" style="font-size: clamp(4.5rem, 10vw, 8rem); font-weight: 500; letter-spacing: -0.03em;">4.2</span>
+          <span class="pb-3 font-serif text-[26px] text-muted">/ 5</span>
+        </div>
+        <div class="mt-4 flex items-center justify-center gap-1" aria-label="4.2 out of 5 stars">
+          <svg viewBox="0 0 20 20" class="h-5 w-5 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+          <svg viewBox="0 0 20 20" class="h-5 w-5 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+          <svg viewBox="0 0 20 20" class="h-5 w-5 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+          <svg viewBox="0 0 20 20" class="h-5 w-5 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+          <svg viewBox="0 0 20 20" class="h-5 w-5" aria-hidden="true">
+            <defs><linearGradient id="agg" x1="0" x2="1" y1="0" y2="0"><stop offset="20%" stop-color="#C9A961"/><stop offset="20%" stop-color="#D8D4C8"/></linearGradient></defs>
+            <path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z" fill="url(#agg)"/>
+          </svg>
+        </div>
+        <p class="mt-4 text-[14px] text-ink/80">From <span class="font-medium text-charcoal">472 Google reviews</span> · verified by neighbors and locals</p>
+      </div>
+
+      <div class="rule mt-14 mb-12 max-w-md mx-auto"></div>
+
+      <!-- Cards -->
+      <div class="reveal -mx-6 px-6 lg:mx-0 lg:px-0 flex lg:grid lg:grid-cols-3 gap-6 overflow-x-auto lg:overflow-visible snap-row pb-2 lg:pb-0">
+
+        <!-- Review 1 -->
+        <figure class="snap-card flex-none w-[85%] sm:w-[60%] lg:w-auto rounded-2xl border border-charcoal/10 bg-cream p-7 md:p-8 flex flex-col">
+          <div class="flex items-center gap-1" aria-label="5 out of 5 stars">
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+          </div>
+          <blockquote class="mt-6 font-serif italic text-[20px] leading-[1.45] text-charcoal/90 flex-1">
+            "OmG I like a lot of diamonds on my nails going to get my nails done tomorrow so I went to pick up some diamonds 💎💎💎"
+          </blockquote>
+          <div class="rule my-7"></div>
+          <figcaption class="flex items-center gap-3">
+            <span aria-hidden="true" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-charcoal/8 font-serif text-[14px] text-charcoal">NS</span>
+            <div>
+              <p class="text-[13px] font-medium text-charcoal">Nia Solomon</p>
+              <p class="text-[11px] uppercase tracking-editorial text-muted">Google Review</p>
+            </div>
+          </figcaption>
+        </figure>
+
+        <!-- Review 2 -->
+        <figure class="snap-card flex-none w-[85%] sm:w-[60%] lg:w-auto rounded-2xl border border-charcoal/10 bg-cream p-7 md:p-8 flex flex-col">
+          <div class="flex items-center gap-1" aria-label="5 out of 5 stars">
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+          </div>
+          <blockquote class="mt-6 font-serif italic text-[20px] leading-[1.45] text-charcoal/90 flex-1">
+            "Great customer service and the lady knew exactly what I was talking about without me even having to name it. I just had to describe it. She was very much on point. I recommend them and their black owned"
+          </blockquote>
+          <div class="rule my-7"></div>
+          <figcaption class="flex items-center gap-3">
+            <span aria-hidden="true" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-charcoal/8 font-serif text-[14px] text-charcoal">CB</span>
+            <div class="flex-1">
+              <p class="text-[13px] font-medium text-charcoal">Courtney Brooks</p>
+              <p class="text-[11px] uppercase tracking-editorial text-muted">Local Guide · Google</p>
+            </div>
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-charcoal text-cream px-2.5 py-1 text-[9px] uppercase tracking-editorial">
+              <svg viewBox="0 0 20 20" class="h-2.5 w-2.5 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+              Local Guide
+            </span>
+          </figcaption>
+        </figure>
+
+        <!-- Review 3 -->
+        <figure class="snap-card flex-none w-[85%] sm:w-[60%] lg:w-auto rounded-2xl border border-charcoal/10 bg-cream p-7 md:p-8 flex flex-col">
+          <div class="flex items-center gap-1" aria-label="5 out of 5 stars">
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+            <svg viewBox="0 0 20 20" class="h-4 w-4 fill-gold" aria-hidden="true"><path d="M10 2l2.39 5.16 5.61.49-4.27 3.7 1.29 5.5L10 14.9l-5.02 1.95 1.29-5.5L2 7.65l5.61-.49z"/></svg>
+          </div>
+          <blockquote class="mt-6 font-serif italic text-[20px] leading-[1.45] text-charcoal/90 flex-1">
+            "Clean, organized, nice staff…"
+          </blockquote>
+          <div class="rule my-7"></div>
+          <figcaption class="flex items-center gap-3">
+            <span aria-hidden="true" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-charcoal/8 font-serif text-[14px] text-charcoal">LH</span>
+            <div>
+              <p class="text-[13px] font-medium text-charcoal">Laura Henderson</p>
+              <p class="text-[11px] uppercase tracking-editorial text-muted">Google Review</p>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="mt-14 flex items-center justify-center reveal">
+        <a href="https://www.google.com/search?q=Diamond+Beauty+Supply+Los+Angeles" target="_blank" rel="noopener" class="group inline-flex items-center gap-2 text-[12px] uppercase tracking-editorial text-charcoal hover:opacity-70 transition-opacity duration-200 cursor-pointer">
+          Read all 472 reviews on Google
+          <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER / VISIT ============ -->
+  <footer id="visit" class="bg-charcoal text-cream">
+    <div class="mx-auto max-w-8xl px-6 py-20 md:py-24">
+
+      <!-- Massive serif visit headline -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-end reveal">
+        <div class="md:col-span-7">
+          <p class="text-[11px] uppercase tracking-editorial text-cream/60">Come See Us · Four Locations</p>
+          <h2 class="mt-4 font-serif" style="font-size: clamp(2.5rem, 6vw, 5rem); line-height: 0.98; font-weight: 500; letter-spacing: -0.02em;">
+            Stop in.<br/><span class="italic font-normal text-cream/85">We'll style it together.</span>
+          </h2>
+        </div>
+        <div class="md:col-span-5 md:text-right">
+          <p class="text-[14px] leading-relaxed text-cream/70 md:ml-auto md:max-w-xs">Four Diamond Beauty Supply stores across Los Angeles, Inglewood, and Gardena — open daily.</p>
+        </div>
+      </div>
+
+      <div class="rule-bright mt-14 mb-12"></div>
+
+      <!-- Locations grid -->
+      <p class="text-[10px] uppercase tracking-editorial text-cream/50 reveal">Locations</p>
+      <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 reveal">
+
+        <address class="not-italic">
+          <p class="font-serif text-[22px] leading-tight">Los Angeles</p>
+          <p class="mt-3 text-[14px] leading-relaxed text-cream/80">
+            1836 W Manchester Ave<br/>
+            Los Angeles, CA 90047
+          </p>
+          <a href="tel:+13237896060" class="mt-3 inline-block text-[13px] text-cream/70 hover:text-cream transition-colors duration-200">(323) 789-6060</a>
+          <div>
+            <a href="https://www.google.com/maps/search/?api=1&query=1836+W+Manchester+Ave,+Los+Angeles,+CA+90047" target="_blank" rel="noopener" class="mt-4 inline-flex items-center gap-1.5 text-[12px] uppercase tracking-editorial text-cream hover:text-cream/70 transition-colors duration-200">
+              Open in Maps
+              <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </address>
+
+        <address class="not-italic">
+          <p class="font-serif text-[22px] leading-tight">Inglewood</p>
+          <p class="mt-3 text-[14px] leading-relaxed text-cream/80">
+            1300 Centinela Ave<br/>
+            Inglewood, CA 90302
+          </p>
+          <a href="tel:+14243315384" class="mt-3 inline-block text-[13px] text-cream/70 hover:text-cream transition-colors duration-200">(424) 331-5384</a>
+          <div>
+            <a href="https://www.google.com/maps/search/?api=1&query=1300+Centinela+Ave,+Inglewood,+CA+90302" target="_blank" rel="noopener" class="mt-4 inline-flex items-center gap-1.5 text-[12px] uppercase tracking-editorial text-cream hover:text-cream/70 transition-colors duration-200">
+              Open in Maps
+              <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </address>
+
+        <address class="not-italic">
+          <p class="font-serif text-[22px] leading-tight">Gardena</p>
+          <p class="mt-3 text-[14px] leading-relaxed text-cream/80">
+            2227–2231 Rosecrans Ave<br/>
+            Gardena, CA 90249
+          </p>
+          <a href="tel:+14243402490" class="mt-3 inline-block text-[13px] text-cream/70 hover:text-cream transition-colors duration-200">(424) 340-2490</a>
+          <div>
+            <a href="https://www.google.com/maps/search/?api=1&query=2227+Rosecrans+Ave,+Gardena,+CA+90249" target="_blank" rel="noopener" class="mt-4 inline-flex items-center gap-1.5 text-[12px] uppercase tracking-editorial text-cream hover:text-cream/70 transition-colors duration-200">
+              Open in Maps
+              <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </address>
+
+        <address class="not-italic">
+          <p class="font-serif text-[22px] leading-tight">Los Angeles</p>
+          <p class="mt-3 text-[14px] leading-relaxed text-cream/80">
+            800 W Manchester Ave<br/>
+            Los Angeles, CA 90044
+          </p>
+          <a href="tel:+13237896220" class="mt-3 inline-block text-[13px] text-cream/70 hover:text-cream transition-colors duration-200">(323) 789-6220</a>
+          <div>
+            <a href="https://www.google.com/maps/search/?api=1&query=800+W+Manchester+Ave,+Los+Angeles,+CA+90044" target="_blank" rel="noopener" class="mt-4 inline-flex items-center gap-1.5 text-[12px] uppercase tracking-editorial text-cream hover:text-cream/70 transition-colors duration-200">
+              Open in Maps
+              <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </address>
+
+      </div>
+
+      <div class="rule-bright mt-14 mb-12"></div>
+
+      <!-- Brand -->
+      <div class="reveal">
+        <p class="font-serif text-[26px] leading-tight">Diamond Beauty Supply</p>
+        <p class="mt-4 text-[14px] leading-relaxed text-cream/70 max-w-xl">Diamond Beauty Supply supports the mission by donating high-quality hair products and bringing together the hair team - braiders and barbers - at Gladys Park once a month! Thanks <a href="https://soulsavingproductions.org" target="_blank" rel="noopener noreferrer" class="text-cream underline decoration-cream/35 underline-offset-[3px] hover:text-hotpink hover:decoration-hotpink/50 transition-colors duration-200">@soulsavingproductions.org</a> for starting such an amazing mission!</p>
+      </div>
+
+      <div class="rule-bright mt-14 mb-6"></div>
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-[11px] uppercase tracking-editorial text-cream/55">
+        <p>© 2026 Diamond Beauty Supply. All rights reserved.</p>
+        <p>Los Angeles, California</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Sidebar menu
+    (function() {
+      const btn = document.getElementById('navToggle');
+      const closeBtn = document.getElementById('navClose');
+      const menu = document.getElementById('mobileMenu');
+      if (!btn || !menu) return;
+
+      function isOpen() { return menu.classList.contains('is-open'); }
+
+      function openMenu() {
+        menu.classList.add('is-open');
+        menu.setAttribute('aria-hidden', 'false');
+        btn.setAttribute('aria-expanded', 'true');
+        btn.setAttribute('aria-label', 'Close menu');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeMenu() {
+        menu.classList.remove('is-open');
+        menu.setAttribute('aria-hidden', 'true');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Open menu');
+        document.body.style.overflow = '';
+      }
+
+      btn.addEventListener('click', () => { isOpen() ? closeMenu() : openMenu(); });
+      if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+      menu.querySelectorAll('[data-menu-close]').forEach(el => {
+        el.addEventListener('click', closeMenu);
+      });
+      menu.querySelectorAll('[data-menu-link]').forEach(a => {
+        a.addEventListener('click', closeMenu);
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isOpen()) closeMenu();
+      });
+    })();
+
+    // Reveal-on-scroll
+    (function() {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const els = document.querySelectorAll('.reveal');
+      if (reduce || !('IntersectionObserver' in window)) {
+        els.forEach(el => el.classList.add('visible'));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      els.forEach(el => io.observe(el));
+    })();
+
+    // Hero video crossfade: A → B → C → A → ... cycling indefinitely.
+    // Trigger crossfade slightly before the active clip ends so the next clip
+    // is already rendering frames during the entire opacity transition — no
+    // black flash, no first-frame pop.
+    (function() {
+      const videos = Array.from(document.querySelectorAll('.hero-video'));
+      if (videos.length < 2) return;
+      const FADE_MS = 600;           // matches CSS transition
+      const LEAD_S  = 0.5;           // start fade this many seconds before end
+      const reduceMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let active = 0;
+      let switching = false;
+
+      // Eagerly buffer all clips so swaps are seamless
+      videos.forEach(v => { try { v.load(); } catch (_) {} });
+
+      function swap() {
+        if (switching) return;
+        switching = true;
+        const cur = videos[active];
+        const nextIdx = (active + 1) % videos.length;
+        const next = videos[nextIdx];
+
+        // Start the next clip rendering BEFORE the fade begins so we never
+        // see a paused/blank frame during the crossfade.
+        try { next.currentTime = 0; } catch (_) {}
+        const p = next.play();
+        const begin = () => {
+          // Wait until next video is actually playing before starting crossfade
+          if (next.paused || next.ended) {
+            switching = false;
+            return;
+          }
+          next.classList.add('active');
+          cur.classList.remove('active');
+          // After the fade, pause the previous clip and rewind it for next cycle
+          window.setTimeout(() => {
+            cur.pause();
+            try { cur.currentTime = 0; } catch (_) {}
+            active = nextIdx;
+            switching = false;
+          }, FADE_MS + 60);
+        };
+        // Wait for video to be ready before crossfading
+        if (p && typeof p.then === 'function') {
+          p.then(() => {
+            // Give it a few frames to buffer before starting fade
+            setTimeout(() => requestAnimationFrame(begin), 100);
+          }).catch(() => begin());
+        } else {
+          requestAnimationFrame(begin);
+        }
+      }
+
+      function onTimeUpdate(e) {
+        if (reduceMQ.matches) return;
+        if (switching) return;
+        const v = e.currentTarget;
+        if (v !== videos[active]) return;
+        if (!isFinite(v.duration)) return;
+        if (v.currentTime >= v.duration - LEAD_S) swap();
+      }
+      function onEnded(e) {
+        if (reduceMQ.matches) return;
+        if (e.currentTarget !== videos[active]) return;
+        if (!switching) swap();
+      }
+
+      videos.forEach(v => {
+        v.addEventListener('timeupdate', onTimeUpdate);
+        v.addEventListener('ended', onEnded);
+      });
+
+      function applyMotionPref() {
+        if (reduceMQ.matches) {
+          // Honor reduced motion: stop the choreography, freeze on the first clip
+          videos.forEach((v, i) => {
+            v.pause();
+            v.classList.toggle('active', i === 0);
+            if (i === 0) v.setAttribute('controls', '');
+            else v.removeAttribute('controls');
+          });
+        } else {
+          videos.forEach(v => v.removeAttribute('controls'));
+          const kick = videos[active].play();
+          if (kick && typeof kick.catch === 'function') kick.catch(() => {});
+        }
+      }
+      applyMotionPref();
+      reduceMQ.addEventListener?.('change', applyMotionPref);
+    })();
+  </script>
+</body>
+</html>
