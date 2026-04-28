@@ -1,0 +1,14 @@
+name = "diamond-welcome-code"
+main = "src/index.js"
+compatibility_date = "2026-04-28"
+
+[vars]
+FROM_EMAIL = "hello@diamondbeautystores.com"
+FROM_NAME = "Diamond Beauty Stores"
+ALLOWED_ORIGIN = "https://diamondbeautystores.com"
+
+[[kv_namespaces]]
+binding = "WELCOME_KV"
+# Create a KV namespace in Cloudflare and paste its id here:
+id = "8286db968fc64fbaacea6431c9cfff2a"
+
